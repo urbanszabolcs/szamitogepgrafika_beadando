@@ -1,19 +1,48 @@
-# "Projecktt Név" (Kitalálás alatt) #
-## 1. A project leírása ##
-### A, Játék menet ###
-A játékos egy hajó kapitányának a szerepébe bújik egy proceduálisan generált tengeren (szigetek elhelyezkedése). A cél a navigáció elsajátítása és ......... A játék egy X*X -es területen játszódik ahol bizonyos célokat kell teljesíteni. Az idő és időjárás dinamikusan változik (Nappal, Este, Reggel, KŐD, ESŐ & VIHAR).
+# Project: [Név kitalálás alatt]
 
-### B, Megvalósítás ###
--Kétmódú kamerarendszer
-  --TPS nézet ami követi a hajót
-  --Szabad nézet amit WASD billentyűkkel szabadon bejárható a virtuális tér.
--Objektumok
-  --Hajó, ágyutornyok, környezeti elemek
---Animáció
-  --
+## 1. A projekt leírása
 
-### C, Többletfunkciók ###
+### A, Játékmenet
+A játékos egy hajó kapitányának szerepébe bújik egy **procedurálisan generált** tengeren, ahol a szigetek elhelyezkedése minden játékalkalommal változik. 
 
-### D, Technikai Stack ###
+* **Cél:** A navigáció elsajátítása, az erőforrások kezelése és a kijelölt küldetések teljesítése.
+* **Játéktér:** Egy $X \times X$ kiterjedésű terület, amelyen belül különböző stratégiai pontokat kell elfoglalni vagy felfedezni.
+* **Dinamikus környezet:** Valós idejű napszakváltás és időjárási rendszerek befolyásolják a látási viszonyokat és a hajó irányíthatóságát:
+    * **Napszakok:** Reggel, Nappal, Este.
+    * **Időjárás:** Tiszta idő, Köd, Eső és Vihar.
 
-### E, Példa GUI ###
+---
+
+### B, Megvalósítás
+* **Kétmódú kamerarendszer:**
+    * **TPS nézet:** A kamera rögzítve követi a hajó mozgását (külső nézet).
+    * **Szabad nézet:** A `WASD` billentyűk segítségével a kamera leválasztható, így a virtuális tér szabadon bejárható.
+* **Objektumok:**
+    * Interaktív hajómodell.
+    * Forgatható ágyútornyok.
+    * Környezeti elemek (sziklák, szigetek, bóják).
+* **Animációk:**
+    * A vízfelszín hullámzása (Shader alapú).
+    * A hajó dőlése a kanyarodás és a hullámok függvényében.
+    * Ágyúk visszarúgása és torkolattűz effektek.
+
+---
+
+### C, Többletfunkciók
+* **Fejleszthető hajótest:** Sebesség, páncélzat és tűzerő növelése.
+* **Legénység kezelése:** Különböző bónuszokat adó tisztek felfogadása.
+* **Kereskedelmi rendszer:** Áruk szállítása a szigetek között a profit reményében.
+
+### D, Technikai Stack
+* **Motor:** Unity (C#) vagy Unreal Engine 5 (C++/Blueprints).
+* **Modellezés:** Blender (Low-poly vagy Realistic stílus).
+* **Verziókezelés:** Git.
+
+### E, Példa GUI
+| Elem | Funkció | Elhelyezkedés |
+| :--- | :--- | :--- |
+| **Iránytű** | Navigáció segítése | Fent, középen |
+| **Sebességmérő** | Hajó aktuális sebessége (csomó) | Bal alsó sarok |
+| **Életerő (Hull)** | Hajótest állapota | Bal alsó sarok |
+| **Mini-map** | Procedurális területnézet | Jobb alsó sarok |
+| **Lőszer/Raktér** | Erőforrások kijelzése | Jobb felső sarok |
