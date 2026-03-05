@@ -1,0 +1,1 @@
+# szamitogepgrafika_beadando
