@@ -33,12 +33,8 @@ A játékos egy hajó kapitányának szerepébe bújik egy **procedurálisan gen
 * **Legénység kezelése:** Különböző bónuszokat adó tisztek felfogadása.
 * **Kereskedelmi rendszer:** Áruk szállítása a szigetek között a profit reményében.
 
-### D, Technikai Stack
-* **Motor:** Unity (C#) vagy Unreal Engine 5 (C++/Blueprints).
-* **Modellezés:** Blender (Low-poly vagy Realistic stílus).
-* **Verziókezelés:** Git.
 
-### E, Példa GUI
+### D, Példa GUI
 | Elem | Funkció | Elhelyezkedés |
 | :--- | :--- | :--- |
 | **Iránytű** | Navigáció segítése | Fent, középen |
