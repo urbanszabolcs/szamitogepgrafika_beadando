@@ -9,8 +9,6 @@
 #include "input/input.h"
 
 
-//Island myIsland = {30.0f, -20.0f, 15.0f, 6.0f, 40};
-
 
 int main(int argc, char* argv[]) {
     SDL_Init(SDL_INIT_VIDEO);
@@ -52,7 +50,6 @@ int main(int argc, char* argv[]) {
 
         drawWater(SDL_GetTicks() / 1000.0f);
         
-//        drawIsland(&myIsland);
 
         glPushMatrix();
             glTranslatef(objX, 0, objZ);
