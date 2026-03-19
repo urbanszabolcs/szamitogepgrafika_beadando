@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     gluPerspective(45.0, 800.0/600.0, 0.1, 1000.0);
     glMatrixMode(GL_MODELVIEW);
 
-    loadModel("assets/boat-row-large.obj");
+    loadModel("assets/ship-pirate-medium");
 
     InputState input = {0};
     float objX = 0, objZ = 0, objAngle = 0;
