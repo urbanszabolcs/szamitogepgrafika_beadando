@@ -1,2 +1,0 @@
-Víz szimuláció minta 1:
-  https://github.com/achalpandeyy/OceanFFT
