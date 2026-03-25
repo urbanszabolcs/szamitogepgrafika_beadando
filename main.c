@@ -14,7 +14,7 @@
 #include "src/input/controls/controls.h"
 #include "src/input/camera/camera.h"
 //#include "src/models/model.h"
-//#include "src/terrain/terrain.h"
+#include "src/terrain/terrain.h"
 //
 #define pi 3.142857
 
