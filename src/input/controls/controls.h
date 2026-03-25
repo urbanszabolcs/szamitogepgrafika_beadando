@@ -1,5 +1,5 @@
-#ifndef INPUT_H
-#define INPIT_H
+#ifndef CONTROLS_H
+#define CONTROLS_H
 
 #include <SDL2/SDL.h>
 

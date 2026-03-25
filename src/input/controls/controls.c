@@ -1,4 +1,4 @@
-#include "input.h"
+#include "controls.h"
 
 void handleInput(SDL_Event *ev, InputState *state)
 {

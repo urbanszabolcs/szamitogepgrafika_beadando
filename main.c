@@ -11,8 +11,8 @@
 
 //
 
-#include "src/input/input.h"
-//#include "src/camera/camera.h"
+#include "src/input/controls/controls.h"
+#include "src/input/camera/camera.h"
 //#include "src/models/model.h"
 //#include "src/terrain/terrain.h"
 //
