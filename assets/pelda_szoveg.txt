@@ -1,0 +1,8 @@
+gui_Példa
+    Nem igazán kell részletezni
+Jatékmenet_pelda (Játék név Waves? Mivel tengeri + bullethell)
+    -A játék egy X*Y-os (Vagy X*X-es) pályán játszódik
+    -Az ellenséges egységek körönkét spawnolnak hullámokban
+    -Célja: Az összes ellenséges megsemmisítése egy hullámban, HP nem érheti el a 0-t
+    -PowerUPok? : HP Regen, AmmoRefil, +DPS
+    -
