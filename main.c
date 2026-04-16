@@ -19,7 +19,7 @@
 int main(int argc, char **argv)
 {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window *win = SDL_CreateWindow("Teszt", 100, 100, 800, 700, SDL_WINDOW_OPENGL);
+    SDL_Window *win = SDL_CreateWindow("Teszt", 100, 100, 1920, 1080, SDL_WINDOW_OPENGL);
     SDL_GLContext ctx = SDL_GL_CreateContext(win);
 
     glEnable(GL_DEPTH_TEST);
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
             if (ev.type == SDL_QUIT)
                 running = 0;
             
-            // 3. LÉPÉS: F1 gomb figyelése a Guide megnyitásához // Jelenleg o betűre van Téve teszt indokból
+            //F1 gomb figyelése a Guide megnyitásához // Jelenleg o betűre van Téve teszt indokból
             if (ev.type == SDL_KEYDOWN) {
                 if (ev.key.keysym.sym == SDLK_o) {
                     Guide_Toggle();
