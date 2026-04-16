@@ -60,7 +60,7 @@ void Guide_Render(void)
         return;
 
     // A Guide kirajzolása a képernyő közepére (vagy egy fix pontra).
-    HUD_RenderTexture(guideTextureID, 100.0f, 100.0f, (float)texWidth, (float)texHeight);
+    HUD_RenderTexture(guideTextureID, 0.0f, 0.0f, (float)texWidth, (float)texHeight);
 }
 
 void Guide_Cleanup(void)
