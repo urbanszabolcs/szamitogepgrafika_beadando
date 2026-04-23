@@ -13,7 +13,7 @@ void drawWater(float time)
         {
             float waves = sinf(x * 0.3f + time) * 0.4f + cosf(z * 0.3f + time) * 0.2f; // hullám generálás
 
-            glColor4f(0.0f, 0.5f, 0.8f, 0.7f); // Víz szine
+            glColor4f(0.0f, 0.5f, 0.8f, 0.7f); // Color of the water
             glVertex3f(x * step, waves, z * step);
             glVertex3f((x + 1) * step, waves, z * step);
             glVertex3f((x + 1) * step, waves, (z + 1) * step);

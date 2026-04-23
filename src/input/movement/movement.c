@@ -3,7 +3,7 @@
 
 void UpdateMovement(const InputState* input, float* objX, float* objZ, float* objAngle) 
 {
-    // Mozgás logika
+    // Movement logic
     if (input->w)
     {
         *objX += sinf(*objAngle * 0.0174f) * 0.2f;
