@@ -1,9 +1,10 @@
-#ifndef ENVIROMENT_H
-#define ENVIROMENT_H
+#ifndef TERRAIN_H
+#define TERRAIN_H
 
 #include <GL/gl.h>
 
-void drawWater(float time);
-
+void drawWaves(float time);
+void drawIsland(void);
+void drawTerrain(float time);
 
 #endif

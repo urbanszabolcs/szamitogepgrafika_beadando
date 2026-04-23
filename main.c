@@ -69,7 +69,7 @@ int main(int argc, char **argv)
 
         updateCamera(playerX, 0, playerZ, camAngleX, camAngleY, camDist);
 
-        drawWater(SDL_GetTicks() / 1000.0f);
+        drawTerrain(SDL_GetTicks() / 1000.0f);
 
         glPushMatrix();
         glTranslatef(playerX, 0, playerZ);
@@ -79,7 +79,7 @@ int main(int argc, char **argv)
         glPopMatrix();
 
         // ---------------------------------------------------------
-        // 2D HUD ÉS GUIDE RAJZOLÁSA A 3D VILÁG FÖLÉ
+        // Drawing 2D hud above 3D
         // ---------------------------------------------------------
         
         // A playerAngle a glRotatef miatt fokban van megadva, de a HUD 

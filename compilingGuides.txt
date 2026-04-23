@@ -1,6 +1,5 @@
 -Compiling
-gcc main.c src/input/controls/controls.c src/input/camera/camera.c src/models/model.c src/terrain/terrain.c src/input/movement/movement.c src/hud/hud.c src/hud/guide.c -o teszt.exe -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lglu32 -mconsole
--Running
+gcc main.c src/input/controls/controls.c src/input/camera/camera.c src/models/model.c src/terrain/terrain.c src/terrain/island.c src/terrain/waves.c src/input/movement/movement.c src/hud/hud.c src/hud/guide.c -o teszt.exe -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lglu32 -mconsole-Running
 .\teszt.exe
 
 Ideas

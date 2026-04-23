@@ -66,6 +66,7 @@ void Guide_Render(void)
     HUD_RenderTexture(guideTextureID, 0.0f, 0.0f, (float)texWidth, (float)texHeight);
 }
 
+
 void Guide_Cleanup(void)
 {
     if (guideTextureID != 0)
