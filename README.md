@@ -1,4 +1,4 @@
-# Project: [Név kitalálás alatt]
+# Project: [Hajó]
 
 ## 1. A projekt leírása
 
