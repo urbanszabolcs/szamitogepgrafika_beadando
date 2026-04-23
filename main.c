@@ -14,7 +14,7 @@
 #include "src/hud/hud.h"
 #include "src/hud/guide.h" 
 
-#define pi 3.142857
+#define pi 3.1415926535
 
 int main(int argc, char **argv)
 {
