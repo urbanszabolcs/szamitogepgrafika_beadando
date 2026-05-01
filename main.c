@@ -37,7 +37,7 @@ int main(int argc, char **argv)
     float camAngleX = 20, camAngleY = 0, camDist = 20;
     int running = 1; // Futás feltétele
 
-    // Teszt változó a HP-hoz 
+    // Test variable for playerHP
     float playerHP = 1.0f; 
 
     while (running)
@@ -48,7 +48,8 @@ int main(int argc, char **argv)
             if (ev.type == SDL_QUIT)
                 running = 0;
             
-            //F1 gomb figyelése a Guide megnyitásához // Jelenleg o betűre van Téve teszt indokból
+            //F1 BUTTOM FOR GUIDE
+// F1 -> Currently its on O
             if (ev.type == SDL_KEYDOWN) {
                 if (ev.key.keysym.sym == SDLK_o) {
                     Guide_Toggle();
@@ -82,14 +83,14 @@ int main(int argc, char **argv)
         // Drawing 2D hud above 3D
         // ---------------------------------------------------------
         
-        // A playerAngle a glRotatef miatt fokban van megadva, de a HUD 
-        // irányszöge radiánt vár, így át kell számolnunk:
+        // Converting radian to degrees
+
         float playerAngleRadians = playerAngle * (pi / 180.0f);
 
-        // Rajzoljuk a HUD elrendezést , jelenleg texturák nélkül KOCKA
+        // Drawing the layout of the hud, currently its a square without texture
         HUD_DrawLayout(0, 0, 0, playerHP, playerAngleRadians);
 
-        // Ha az F1 meg lett nyomva, rajzoljuk ki a Guide-ot is legfelülre
+        // If F1 is pressed render the hud
         if (Guide_IsVisible()) {
             Guide_Render();
         }
