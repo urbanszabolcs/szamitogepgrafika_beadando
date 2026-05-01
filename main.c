@@ -35,7 +35,7 @@ int main(int argc, char **argv)
     InputState input = {0};
     float playerX = 0, playerZ = 0, playerAngle = 0;
     float camAngleX = 20, camAngleY = 0, camDist = 20;
-    int running = 1; // Futás feltétele
+    int running = 1; // Condition of running
 
     // Test variable for playerHP
     float playerHP = 1.0f; 
