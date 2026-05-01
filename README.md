@@ -28,13 +28,7 @@ A játékos egy hajó kapitányának szerepébe bújik egy **procedurálisan gen
 
 ---
 
-### C, Többletfunkciók
-* **Fejleszthető hajótest:** Sebesség, páncélzat és tűzerő növelése.
-* **Legénység kezelése:** Különböző bónuszokat adó tisztek felfogadása.
-* **Kereskedelmi rendszer:** Áruk szállítása a szigetek között a profit reményében.
-
-
-### D, Példa GUI
+### C, Példa GUI
 | Elem | Funkció | Elhelyezkedés |
 | :--- | :--- | :--- |
 | **Iránytű** | Navigáció segítése | Fent, középen |
