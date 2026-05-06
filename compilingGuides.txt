@@ -1,8 +1,21 @@
 -Compiling
-gcc main.c src/input/controls/controls.c src/input/camera/camera.c src/models/model.c src/terrain/terrain.c src/terrain/island.c src/terrain/waves.c src/input/movement/movement.c src/hud/hud.c src/hud/guide.c src/weather/weather.c -o teszt.exe -lmingw32 -lSDL2main -lSDL2 -lopengl32 -lglu32 -mconsole
-.\teszt.exe
+    SDL_TTF
+        Step 1. Download the SDL2 version of this
+        https://github.com/libsdl-org/SDL_ttf/releases
 
-Ideas
--When launching the game's .exe, a basic configuration window should pop up (with options for screen resolution, fullscreen, and volume), similar to older video games or certain Unity games.
--Pressing the ESC key should open a settings menu.
--Convert the guide.bmp into a flag and attach it to a ship model I created.
+        Step 2. Open the i686 folder
+        copy the contents of the lib folder to the compilers lib folder (libSDL2_ttf.a, ttf.dll.a, etc) next to libSDL2.and
+
+        Step 3. copy the .dll nex to the game (not needed for users)
+
+        Step 4. copy the SDL_tff.h (from the include folder) next to the SDL.h
+
+        Step 5. Profit?
+
+
+TO compile the game run this:
+
+gcc main.c src/input/controls/controls.c src/input/camera/camera.c src/models/model.c src/terrain/terrain.c src/terrain/island.c src/terrain/waves.c src/input/movement/movement.c src/hud/hud.c src/hud/guide.c src/weather/weather.c src/config/config.c -o teszt.exe -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lopengl32 -lglu32 -mconsole
+./teszt.exe
+
+

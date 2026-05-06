@@ -14,6 +14,7 @@
 #include "src/hud/hud.h"
 #include "src/hud/guide.h"
 #include "src/weather/weather.h"
+#include "src/config/config.h"
 
 #define pi 3.1415926535
 
@@ -28,6 +29,7 @@ int main(int argc, char **argv)
     // Initialize systems
     initIslands();
     initWeather();
+    Config_Init(win);
 
     // Fog
     glEnable(GL_FOG);
@@ -43,6 +45,7 @@ int main(int argc, char **argv)
     loadModel("assets/models/player/player_model.obj");
 
     HUD_Init(800, 700);
+    HUD_LoadFont("assets/fonts/roboto_font.ttf", 64); // Make sure the path points to a real .ttf file!
     Guide_Init();
 
     InputState input = {0};
@@ -60,16 +63,44 @@ int main(int argc, char **argv)
             if (ev.type == SDL_QUIT)
                 running = 0;
 
+            // Catch window resize events to update OpenGL's aspect ratio
+            if (ev.type == SDL_WINDOWEVENT && ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+            {
+                int newWidth = ev.window.data1;
+                int newHeight = ev.window.data2;
+
+                // Update the viewport to the new size
+                glViewport(0, 0, newWidth, newHeight);
+
+                // Update the 3D perspective matrix so nothing looks stretched
+                glMatrixMode(GL_PROJECTION);
+                glLoadIdentity();
+                gluPerspective(45.0, (float)newWidth / (float)newHeight, 0.1, 1000.0);
+                glMatrixMode(GL_MODELVIEW);
+            }
+            // --------------------------
+
+            Config_HandleInput(&ev);
+
             if (ev.type == SDL_KEYDOWN)
             {
-                if (ev.key.keysym.sym == SDLK_o)
-                {
+                if (ev.key.keysym.sym == SDLK_F1)
                     Guide_Toggle();
+                if (ev.key.keysym.sym == SDLK_ESCAPE)
+                {
+                    if (Guide_IsVisible())
+                        Guide_Toggle();
                 }
+                
+                if (ev.key.keysym.sym == SDLK_c) // Press C to open config menu
+                    Config_Toggle();
+
                 if (ev.key.keysym.sym == SDLK_KP_PLUS)
                     increaseDayNightSpeed();
                 if (ev.key.keysym.sym == SDLK_KP_MINUS)
                     decreaseDayNightSpeed();
+
+                // Handle config navigation
             }
 
             handleInput(&ev, &input);
@@ -78,8 +109,6 @@ int main(int argc, char **argv)
         UpdateMovement(&input, &playerX, &playerZ, &playerAngle);
 
         float currentTime = SDL_GetTicks() / 1000.0f;
-
-        // Ship floating
         playerY = getWaterHeight(playerX, playerZ, currentTime) + 0.8f;
 
         camAngleY += input.mouseXRel * 0.5f;
@@ -91,13 +120,11 @@ int main(int argc, char **argv)
 
         updateCamera(playerX, playerY, playerZ, camAngleX, camAngleY, camDist);
 
-        // Weather & Lighting
         updateWeather(currentTime);
         applyLighting();
 
         drawTerrain(currentTime);
 
-        // Render ship
         glPushMatrix();
         glTranslatef(playerX, playerY, playerZ);
         glRotatef(playerAngle, 0, 1, 0);
@@ -105,14 +132,14 @@ int main(int argc, char **argv)
         renderModel();
         glPopMatrix();
 
-        // HUD
         float playerAngleRadians = playerAngle * (pi / 180.0f);
         HUD_DrawLayout(0, 0, 0, playerHP, playerAngleRadians);
 
         if (Guide_IsVisible())
-        {
             Guide_Render();
-        }
+
+        if (Config_IsOpen())
+            Config_Render();
 
         SDL_GL_SwapWindow(win);
         SDL_Delay(16);

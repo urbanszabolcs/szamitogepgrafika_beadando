@@ -1,13 +1,35 @@
 #include "hud.h"
 #include <GL/gl.h>
 #include <math.h>
+#include <stdio.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 static int sWidth, sHeight;
+static TTF_Font *hudFont = NULL; // Stores our loaded font
 
 void HUD_Init(int screenWidth, int screenHeight)
 {
     sWidth = screenWidth;
     sHeight = screenHeight;
+}
+
+// --- Font Initialization ---
+void HUD_LoadFont(const char *fontPath, int fontSize)
+{
+    // Initialize the TTF engine if it hasn't been already
+    if (TTF_Init() == -1)
+    {
+        printf("Error initializing SDL_ttf: %s\n", TTF_GetError());
+        return;
+    }
+
+    // Load the font file
+    hudFont = TTF_OpenFont(fontPath, fontSize);
+    if (!hudFont)
+    {
+        printf("Failed to load font %s: %s\n", fontPath, TTF_GetError());
+    }
 }
 
 // Helper function: switching from 3D to 2D view
@@ -17,7 +39,7 @@ static void Begin2D(void)
     glPushMatrix();
     glLoadIdentity();
 
-    // Setting up orthographic (flat) projections (Left, Right, Borrom, Top, Near, Far)
+    // Setting up orthographic (flat) projections (Left, Right, Bottom, Top, Near, Far)
     glOrtho(0.0, sWidth, sHeight, 0.0, -1.0, 1.0);
 
     glMatrixMode(GL_MODELVIEW);
@@ -29,11 +51,17 @@ static void Begin2D(void)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-// Helper function: returning to 3d
+// Helper function: returning to 3D
 static void End2D(void)
 {
     glEnable(GL_DEPTH_TEST);
-
+    
+    // --- CRITICAL FIXES FOR 3D RENDERING ---
+    glDisable(GL_BLEND);               // Turn off UI transparency
+    glDisable(GL_TEXTURE_2D);          // Turn off 2D texturing
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset global color to pure white
+    // ---------------------------------------
+    
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
@@ -72,7 +100,7 @@ void HUD_RenderTextureRotated(GLuint texture, float x, float y, float width, flo
 
     glPushMatrix();
     glTranslatef(cx, cy, 0.0f);
-    // glRotatef excepts degrees, so we convert frm radians to degrees
+    // glRotatef expects degrees, so we convert from radians to degrees
     glRotatef(rotationRadians * (180.0f / 3.14159265f), 0.0f, 0.0f, 1.0f);
     glTranslatef(-cx, -cy, 0.0f);
 
@@ -96,10 +124,64 @@ void HUD_RenderTexture(GLuint texture, float x, float y, float width, float heig
     HUD_RenderTextureRotated(texture, x, y, width, height, 0.0f); // 0 degree rotation
 }
 
+// --- Text Rendering Function (with pitch fix) ---
+// --- Text Rendering Function (with scaling support) ---
+void HUD_RenderText(const char *text, float x, float y, float scale, float r, float g, float b)
+{
+    if (!hudFont || !text)
+        return;
+
+    SDL_Color color = {(Uint8)(r * 255), (Uint8)(g * 255), (Uint8)(b * 255), 255};
+    SDL_Surface *originalSurface = TTF_RenderText_Blended(hudFont, text, color);
+    if (!originalSurface)
+        return;
+
+    SDL_Surface *surface = SDL_ConvertSurfaceFormat(originalSurface, SDL_PIXELFORMAT_ABGR8888, 0);
+    SDL_FreeSurface(originalSurface);
+
+    if (!surface)
+        return;
+
+    // Calculate the scaled drawing dimensions
+    float drawW = surface->w * scale;
+    float drawH = surface->h * scale;
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface->w, surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, surface->pixels);
+
+    // Using GL_LINEAR makes scaled-down text look perfectly smooth
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    Begin2D();
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // Draw the quad using the scaled width and height
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex2f(x, y);
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex2f(x + drawW, y);
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex2f(x + drawW, y + drawH);
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex2f(x, y + drawH);
+    glEnd();
+
+    End2D();
+
+    glDeleteTextures(1, &texture);
+    SDL_FreeSurface(surface);
+}
+
 // --- MAIN LAYOUT BASED ON THE DRAWING ---
 void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTexture, float healthPercentage, float shipYawRadians)
 {
-
     // 1. Ammo / Current weapon (Top-Left corner)
     if (ammoTexture != 0)
     {
