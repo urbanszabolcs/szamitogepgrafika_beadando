@@ -1,3 +1,5 @@
+//Change the model.c file so that we can render textures over the .obj models
+
 #include "model.h"
 #include <stdio.h>
 

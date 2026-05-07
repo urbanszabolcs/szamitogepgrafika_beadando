@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     // Fog
     glEnable(GL_FOG);
     glFogf(GL_FOG_MODE, GL_LINEAR);
-    glFogf(GL_FOG_START, 80.0f);
+    glFogf(GL_FOG_START, 30.0f);
     glFogf(GL_FOG_END, 300.0f);
     glFogfv(GL_FOG_COLOR, (float[]){0.6f, 0.75f, 0.9f, 1.0f});
 

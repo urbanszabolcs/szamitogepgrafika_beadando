@@ -1,3 +1,4 @@
+//Change the waves.c file so the ship doesn't float, it always stays on the level of the water
 #include "terrain.h"
 #include <math.h>
 
