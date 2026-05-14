@@ -4,7 +4,7 @@
 
 void UpdateMovement(const InputState* input, float* objX, float* objZ, float* objAngle) 
 {
-    float moveSpeed = 0.5f; //Make moevement speed changeable with SHIFT key, Show the current speed lvl on the hud
+    float moveSpeed = 0.3f; //Make moevement speed changeable with SHIFT key, Show the current speed lvl on the hud
 
     if (input->w)
     {

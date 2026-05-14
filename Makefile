@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -O2
-LIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lopengl32 -lglu32 -mconsole
-TARGET = teszt.exe
+LIBS = -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf -lSDL2_image -lopengl32 -lglu32 -mconsole
+TARGET = game.exe
 OBJ_DIR = obj
 
 SRCS = main.c \

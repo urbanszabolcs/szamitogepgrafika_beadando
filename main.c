@@ -42,10 +42,12 @@ int main(int argc, char **argv)
     gluPerspective(45.0, 1920.0f / 1080.0f, 0.1, 1000.0);
     glMatrixMode(GL_MODELVIEW);
 
+    // --- TEXTURE AND MODEL LOADING ---
     loadModel("assets/models/player/CruiseLiner.obj");
+    GLuint shipTexture = loadModelTexture("assets/models/player/CruiseLiner_BaseColor.png");
 
     HUD_Init(800, 700);
-    HUD_LoadFont("assets/fonts/roboto_font.ttf", 64); // Make sure the path points to a real .ttf file!
+    HUD_LoadFont("assets/fonts/roboto_font.ttf", 64); 
     Guide_Init();
 
     InputState input = {0};
@@ -69,16 +71,13 @@ int main(int argc, char **argv)
                 int newWidth = ev.window.data1;
                 int newHeight = ev.window.data2;
 
-                // Update the viewport to the new size
                 glViewport(0, 0, newWidth, newHeight);
 
-                // Update the 3D perspective matrix so nothing looks stretched
                 glMatrixMode(GL_PROJECTION);
                 glLoadIdentity();
                 gluPerspective(45.0, (float)newWidth / (float)newHeight, 0.1, 1000.0);
                 glMatrixMode(GL_MODELVIEW);
             }
-            // --------------------------
 
             Config_HandleInput(&ev);
 
@@ -94,15 +93,13 @@ int main(int argc, char **argv)
                         Config_Toggle();
                 }
 
-                if (ev.key.keysym.sym == SDLK_c) // Press C to open config menu
+                if (ev.key.keysym.sym == SDLK_c) 
                     Config_Toggle();
 
                 if (ev.key.keysym.sym == SDLK_KP_PLUS)
                     increaseDayNightSpeed();
                 if (ev.key.keysym.sym == SDLK_KP_MINUS)
                     decreaseDayNightSpeed();
-
-                // Handle config navigation
             }
 
             handleInput(&ev, &input);
@@ -127,11 +124,14 @@ int main(int argc, char **argv)
 
         drawTerrain(currentTime);
 
+        // --- RENDER THE PLAYER MODEL ---
         glPushMatrix();
         glTranslatef(playerX, playerY, playerZ);
         glRotatef(playerAngle, 0, 1, 0);
-        glColor3f(0.5f, 0.3f, 0.1f);
-        renderModel();
+        
+        //changeing the scale of the ship
+        renderModel(shipTexture, 0.5f); 
+        
         glPopMatrix();
 
         float playerAngleRadians = playerAngle * (pi / 180.0f);
