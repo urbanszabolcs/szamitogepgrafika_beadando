@@ -1,4 +1,4 @@
-# Project: boating around
+# Project: Boating Around
 
 ## 1. A projekt leírása
 
