@@ -3,6 +3,11 @@
 
 #include "../controls/controls.h"
 
-void UpdateMovement(const InputState* input, float* objX, float* objZ, float* objAngle);
+// Returns 1 if we crashed into an island, 0 if safe
+int UpdateMovement(const InputState* input, float* objX, float* objZ, float* objAngle);
+
+// New functions to read and reset the engine
+float GetCurrentSpeed(void);
+void ResetMovement(void);
 
 #endif

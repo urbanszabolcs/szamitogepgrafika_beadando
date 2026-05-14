@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     GLuint shipTexture = loadModelTexture("assets/models/player/CruiseLiner_BaseColor.png");
 
     HUD_Init(800, 700);
-    HUD_LoadFont("assets/fonts/roboto_font.ttf", 64); 
+    HUD_LoadFont("assets/fonts/roboto_font.ttf", 64);
     Guide_Init();
 
     InputState input = {0};
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
                         Config_Toggle();
                 }
 
-                if (ev.key.keysym.sym == SDLK_c) 
+                if (ev.key.keysym.sym == SDLK_c)
                     Config_Toggle();
 
                 if (ev.key.keysym.sym == SDLK_KP_PLUS)
@@ -105,7 +105,27 @@ int main(int argc, char **argv)
             handleInput(&ev, &input);
         }
 
-        UpdateMovement(&input, &playerX, &playerZ, &playerAngle);
+        int hasCrashed = UpdateMovement(&input, &playerX, &playerZ, &playerAngle);
+
+        // 2. Handle HP and Restart
+        if (hasCrashed)
+        {
+            playerHP -= 0.15f; // Lose 15% HP per crash
+
+            // If HP hits 0, reset the game!
+            if (playerHP <= 0.0f)
+            {
+                printf("Ship Destroyed! Restarting...\n");
+                playerHP = 1.0f;
+                playerX = 0.0f;
+                playerZ = 0.0f;
+                playerAngle = 0.0f;
+                ResetMovement();
+
+                // Optional: Randomize the islands again so it's a fresh game!
+                initIslands();
+            }
+        }
 
         float currentTime = SDL_GetTicks() / 1000.0f;
         playerY = getWaterHeight(playerX, playerZ, currentTime) + 0.0f;
@@ -128,15 +148,18 @@ int main(int argc, char **argv)
         glPushMatrix();
         glTranslatef(playerX, playerY, playerZ);
         glRotatef(playerAngle, 0, 1, 0);
-        
-        //changeing the scale of the ship
-        renderModel(shipTexture, 0.5f); 
-        
+
+        // changeing the scale of the ship
+        renderModel(shipTexture, 0.5f);
+
         glPopMatrix();
 
+        float speedToDraw = GetCurrentSpeed();
         float playerAngleRadians = playerAngle * (pi / 180.0f);
-        HUD_DrawLayout(0, 0, 0, playerHP, playerAngleRadians);
 
+        HUD_DrawLayout(0, 0, 0, playerHP, playerAngleRadians, speedToDraw);
+
+        
         if (Guide_IsVisible())
             Guide_Render();
 

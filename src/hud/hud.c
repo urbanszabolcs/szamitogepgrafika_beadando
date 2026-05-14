@@ -180,8 +180,7 @@ void HUD_RenderText(const char *text, float x, float y, float scale, float r, fl
 }
 
 // --- MAIN LAYOUT BASED ON THE DRAWING ---
-void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTexture, float healthPercentage, float shipYawRadians)
-{
+void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTexture, float healthPercentage, float shipYawRadians, float currentSpeed){
     // 1. Ammo / Current weapon (Top-Left corner)
     if (ammoTexture != 0)
     {
@@ -208,16 +207,30 @@ void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTextu
     HUD_RenderRect(hpX, hpY, hpWidth * healthPercentage, hpHeight, 0.0f, 0.8f, 0.2f, 1.0f); // Green line
 
     // 3. Ship speed, Direction panel (Bottom left corner)
-    if (speedTexture != 0)
+   if (speedTexture != 0)
     {
         HUD_RenderTexture(speedTexture, 20.0f, sHeight - 120.0f, 250.0f, 100.0f);
     }
     else
     {
-        // Placeholder dark blue box
+        // Background box
         HUD_RenderRect(20.0f, sHeight - 120.0f, 250.0f, 100.0f, 0.1f, 0.2f, 0.4f, 0.8f);
-    }
 
+        // --- NEW: Render the Speed Text ---
+        char speedStr[64];
+        // Multiply by 100 so "0.6f" shows as a cool "60 Knots"
+        snprintf(speedStr, sizeof(speedStr), "Speed: %d kts", (int)(fabsf(currentSpeed) * 100));
+        HUD_RenderText(speedStr, 35.0f, sHeight - 105.0f, 0.4f, 1.0f, 1.0f, 1.0f);
+
+        // Render the Gear State (Ahead, Neutral, or Reverse)
+        if (currentSpeed > 0.05f) {
+            HUD_RenderText("Ahead", 35.0f, sHeight - 65.0f, 0.35f, 0.0f, 1.0f, 0.0f); // Green
+        } else if (currentSpeed < -0.05f) {
+            HUD_RenderText("Reverse", 35.0f, sHeight - 65.0f, 0.35f, 1.0f, 0.0f, 0.0f); // Red
+        } else {
+            HUD_RenderText("Neutral", 35.0f, sHeight - 65.0f, 0.35f, 0.7f, 0.7f, 0.7f); // Gray
+        }
+    }
     // 4. Compass (Top-right corner)
     float compassSize = 120.0f;
     if (compassTexture != 0)
