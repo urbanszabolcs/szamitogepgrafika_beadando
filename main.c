@@ -126,7 +126,7 @@ int main(int argc, char **argv)
         // 2. Handle HP and Restart
         if (hasCrashed)
         {
-            playerHP -= 0.15f; // Lose 15% HP per crash
+            playerHP -= 0.50f; // Lose 45% HP per crash
 
             // If HP hits 0, reset the game!
             if (playerHP <= 0.0f)
@@ -166,6 +166,8 @@ int main(int argc, char **argv)
         glRotatef(playerAngle, 0, 1, 0);
 
         // changeing the scale of the ship
+
+
         renderModel(shipTexture, 0.5f);
 
         glPopMatrix();

@@ -16,8 +16,8 @@ void ResetMovement(void) {
 
 int UpdateMovement(const InputState* input, float* objX, float* objZ, float* objAngle) 
 {
-    float maxSpeedForward = 0.6f;
-    float maxSpeedReverse = -0.2f;
+    float maxSpeedForward = 0.5f;
+    float maxSpeedReverse = -0.125f;
     float acceleration = 0.002f; 
     float throttleChange = 0.008f; 
     int crashed = 0; // Track if we hit something this frame

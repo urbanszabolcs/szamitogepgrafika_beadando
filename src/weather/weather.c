@@ -71,7 +71,7 @@ void applyLighting(void)
     float sunAngle = currentCycle * 6.283185f;
 
     // Sun/Moon Position
-    // We use fabsf(sinf) on the Y axis so when the sun sets, the "Moon" rises from the same horizon!
+    //  fabsf(sinf) on the Y axis so when the sun sets, the "Moon" rises from the same horizon!
     GLfloat lightPos[4] = {
         cosf(sunAngle) * 100.0f,
         fabsf(sinf(sunAngle)) * 100.0f + 5.0f, // +5 keeps it slightly above the water at sunset
@@ -112,3 +112,4 @@ void decreaseDayNightSpeed(void)
     // Rewind time by roughly 1 in-game hour
     timeOffset -= 2.0f;
 }
+

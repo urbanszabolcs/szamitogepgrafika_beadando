@@ -9,4 +9,6 @@ void applyLighting(void);
 void increaseDayNightSpeed(void);
 void decreaseDayNightSpeed(void);
 
+void drawShipShadow(float x, float z, float angle, float time);
+
 #endif

@@ -249,18 +249,17 @@ void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTextu
     }
     else
     {
-        // Placeholder yellow box
         HUD_RenderRect(compassX, compassY, compassSize, compassSize, 0.6f, 0.6f, 0.0f, 0.8f);
     }
 
-    // --- NEW: Draw a static Red Triangle to mark "Forward" ---
+    // Draw a static Red Triangle to mark "Forward" ---
     Begin2D();
     glDisable(GL_TEXTURE_2D);
     glColor4f(0.85f, 0.15f, 0.15f, 1.0f); // Bright Red
 
     glBegin(GL_TRIANGLES);
     float centerX = compassX + (compassSize / 2.0f);
-    // Draw an upward-pointing triangle right at the top middle of the compass
+    // Draw  upward-pointing triangle right at the top middle of the compass
     glVertex2f(centerX, compassY - 8.0f);         // Top point
     glVertex2f(centerX - 8.0f, compassY + 12.0f); // Bottom left
     glVertex2f(centerX + 8.0f, compassY + 12.0f); // Bottom right
@@ -268,3 +267,5 @@ void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTextu
 
     End2D();
 }
+
+
