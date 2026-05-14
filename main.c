@@ -42,7 +42,7 @@ int main(int argc, char **argv)
     gluPerspective(45.0, 1920.0f / 1080.0f, 0.1, 1000.0);
     glMatrixMode(GL_MODELVIEW);
 
-    loadModel("assets/models/player/player_model.obj");
+    loadModel("assets/models/player/CruiseLiner.obj");
 
     HUD_Init(800, 700);
     HUD_LoadFont("assets/fonts/roboto_font.ttf", 64); // Make sure the path points to a real .ttf file!
@@ -90,8 +90,10 @@ int main(int argc, char **argv)
                 {
                     if (Guide_IsVisible())
                         Guide_Toggle();
+                    if (Config_IsOpen())
+                        Config_Toggle();
                 }
-                
+
                 if (ev.key.keysym.sym == SDLK_c) // Press C to open config menu
                     Config_Toggle();
 
@@ -109,7 +111,7 @@ int main(int argc, char **argv)
         UpdateMovement(&input, &playerX, &playerZ, &playerAngle);
 
         float currentTime = SDL_GetTicks() / 1000.0f;
-        playerY = getWaterHeight(playerX, playerZ, currentTime) + 0.8f;
+        playerY = getWaterHeight(playerX, playerZ, currentTime) + 0.0f;
 
         camAngleY += input.mouseXRel * 0.5f;
         camAngleX += input.mouseYRel * 0.5f;

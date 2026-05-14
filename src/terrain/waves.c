@@ -4,10 +4,11 @@
 
 #define WATER_SIZE 120
 
+static const float STEP_SIZE = 2.0f;
+
 void drawWaves(float time)
 {
     int size = WATER_SIZE;
-    float step = 2.0f;
 
     glBegin(GL_QUADS);
 
@@ -15,7 +16,7 @@ void drawWaves(float time)
     {
         for (int z = -size; z < size; z++)
         {
-            // Calculate wave height
+            // The wave height is calculated based on the GRID index (x, z)
             float h1 = sinf(x * 0.15f + time * 0.7f) * 1.0f +
                        cosf(z * 0.17f + time * 0.5f) * 0.65f +
                        sinf((x + z) * 0.06f + time * 0.3f) * 0.35f;
@@ -40,20 +41,26 @@ void drawWaves(float time)
 
             glColor3f(r, g, b);
 
-            glVertex3f(x * step, h1, z * step);
-            glVertex3f((x + 1) * step, h2, z * step);
-            glVertex3f((x + 1) * step, h3, (z + 1) * step);
-            glVertex3f(x * step, h4, (z + 1) * step);
+            // The physical vertex in the 3D world is multiplied by STEP_SIZE
+            glVertex3f(x * STEP_SIZE, h1, z * STEP_SIZE);
+            glVertex3f((x + 1) * STEP_SIZE, h2, z * STEP_SIZE);
+            glVertex3f((x + 1) * STEP_SIZE, h3, (z + 1) * STEP_SIZE);
+            glVertex3f(x * STEP_SIZE, h4, (z + 1) * STEP_SIZE);
         }
     }
     glEnd();
 }
 
 // Used for ship floating
-float getWaterHeight(float x, float z, float time)
+float getWaterHeight(float worldX, float worldZ, float time)
 {
-    float h = sinf(x * 0.15f + time * 0.7f) * 1.0f +
-              cosf(z * 0.17f + time * 0.5f) * 0.65f +
-              sinf((x + z) * 0.06f + time * 0.3f) * 0.35f;
+    // Without this, the ship calculates waves out of sync with the visual rendering.
+    float gridX = worldX / STEP_SIZE;
+    float gridZ = worldZ / STEP_SIZE;
+
+    float h = sinf(gridX * 0.15f + time * 0.7f) * 1.0f +
+              cosf(gridZ * 0.17f + time * 0.5f) * 0.65f +
+              sinf((gridX + gridZ) * 0.06f + time * 0.3f) * 0.35f;
+    
     return h;
 }
