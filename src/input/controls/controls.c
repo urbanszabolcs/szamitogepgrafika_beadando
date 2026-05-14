@@ -2,9 +2,6 @@
 
 void handleInput(SDL_Event *ev, InputState *state)
 {
-    state->mouseXRel = 0;
-    state->mouseYRel = 0;
-    state->scroll = 0;
 
     if (ev->type == SDL_KEYDOWN || ev->type == SDL_KEYUP)
     {

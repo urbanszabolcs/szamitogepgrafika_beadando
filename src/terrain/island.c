@@ -3,9 +3,10 @@
 #include <time.h>
 #include <math.h>
 
-#define MAX_ISLANDS 8
+#define MAX_ISLANDS 30
 
-typedef struct {
+typedef struct
+{
     float x, z;
     float radius;
     float height;
@@ -15,27 +16,55 @@ typedef struct {
 static Island islands[MAX_ISLANDS];
 static int islandCount = 0;
 
+// --- NEW: Procedural Shape Generator ---
+// This distorts the radius based on the angle and the island's unique position
+static float getDeformedRadius(float baseRadius, float angle, float seedX, float seedZ)
+{
+    // Combine 3 different waves to create an organic "blob" shape.
+    // The multipliers (2.0, 3.0, 5.0) MUST be whole numbers so the island connects seamlessly at the end of the loop!
+    float offset = 0.25f * sinf(angle * 2.0f + seedX) + 
+                   0.15f * cosf(angle * 3.0f + seedZ) + 
+                   0.10f * sinf(angle * 5.0f - seedX);
+                   
+    return baseRadius * (1.0f + offset);
+}
+// ---------------------------------------
+
 void initIslands(void)
 {
-    srand(42);                    // Fixed seed for consistent islands
-    islandCount = 6 + rand() % 3; // 6 to 8 islands
+    srand(42); // Fixed seed for consistent islands
+
+    // Spawn between 15 and 25 islands
+    islandCount = 15 + rand() % 10;
 
     for (int i = 0; i < islandCount; i++)
     {
-        islands[i].x = (rand() % 320 - 160) * 1.8f;
-        islands[i].z = (rand() % 320 - 160) * 1.8f;
+        // Spread them out across a huge -400 to +400 grid
+        islands[i].x = (float)(rand() % 800 - 400);
+        islands[i].z = (float)(rand() % 800 - 400);
+
         islands[i].radius = 18.0f + rand() % 18;
         islands[i].height = 8.0f + rand() % 13;
-        islands[i].baseHeight = 0.0f;        // Base at water level
+        islands[i].baseHeight = 0.0f; // Base at water level
     }
 }
 
-void drawIsland(void)
+void drawIsland(float playerX, float playerZ)
 {
+    float maxDistSq = 350.0f * 350.0f;
+
     for (int i = 0; i < islandCount; i++)
     {
         Island is = islands[i];
 
+        float dx = is.x - playerX;
+        float dz = is.z - playerZ;
+
+        if ((dx * dx + dz * dz) > maxDistSq)
+        {
+            continue; 
+        }
+        
         glPushMatrix();
         glTranslatef(is.x, is.baseHeight, is.z);
 
@@ -43,9 +72,11 @@ void drawIsland(void)
         glColor3f(0.12f, 0.38f, 0.48f);
         glBegin(GL_TRIANGLE_FAN);
         glVertex3f(0, -2.0f, 0);
-        for (int a = 0; a <= 32; a++) {
-            float ang = a * 0.19635f;
-            glVertex3f(cosf(ang) * is.radius * 1.2f, -2.0f, sinf(ang) * is.radius * 1.2f);
+        for (int a = 0; a <= 32; a++)
+        {
+            float ang = a * 0.19635f; // (2 * PI) / 32
+            float defRad = getDeformedRadius(is.radius * 1.2f, ang, is.x, is.z);
+            glVertex3f(cosf(ang) * defRad, -2.0f, sinf(ang) * defRad);
         }
         glEnd();
 
@@ -53,22 +84,27 @@ void drawIsland(void)
         glColor3f(0.88f, 0.78f, 0.58f);
         glBegin(GL_TRIANGLE_FAN);
         glVertex3f(0, 0.2f, 0);
-        for (int a = 0; a <= 32; a++) {
+        for (int a = 0; a <= 32; a++)
+        {
             float ang = a * 0.19635f;
-            glVertex3f(cosf(ang) * is.radius, 0.2f, sinf(ang) * is.radius);
+            float defRad = getDeformedRadius(is.radius, ang, is.x, is.z);
+            glVertex3f(cosf(ang) * defRad, 0.2f, sinf(ang) * defRad);
         }
         glEnd();
 
         // === Main green land body (3D) ===
         glColor3f(0.30f, 0.58f, 0.20f);
         glBegin(GL_QUAD_STRIP);
-        for (int a = 0; a <= 32; a++) {
+        for (int a = 0; a <= 32; a++)
+        {
             float ang = a * 0.19635f;
-            float x1 = cosf(ang) * is.radius;
-            float z1 = sinf(ang) * is.radius;
+            // Base of the slope matches the beach
+            float rBase = getDeformedRadius(is.radius, ang, is.x, is.z);
+            // Top of the slope matches the plateau
+            float rTop = getDeformedRadius(is.radius * 0.58f, ang, is.x, is.z);
 
-            glVertex3f(x1, 0.2f, z1);
-            glVertex3f(x1 * 0.58f, is.height * 0.55f, z1 * 0.58f);
+            glVertex3f(cosf(ang) * rBase, 0.2f, sinf(ang) * rBase);
+            glVertex3f(cosf(ang) * rTop, is.height * 0.55f, sinf(ang) * rTop);
         }
         glEnd();
 
@@ -76,9 +112,11 @@ void drawIsland(void)
         glColor3f(0.25f, 0.50f, 0.16f);
         glBegin(GL_TRIANGLE_FAN);
         glVertex3f(0, is.height * 0.55f, 0);
-        for (int a = 0; a <= 32; a++) {
+        for (int a = 0; a <= 32; a++)
+        {
             float ang = a * 0.19635f;
-            glVertex3f(cosf(ang) * is.radius * 0.58f, is.height * 0.55f, sinf(ang) * is.radius * 0.58f);
+            float defRad = getDeformedRadius(is.radius * 0.58f, ang, is.x, is.z);
+            glVertex3f(cosf(ang) * defRad, is.height * 0.55f, sinf(ang) * defRad);
         }
         glEnd();
 
@@ -95,7 +133,13 @@ int checkIslandCollision(float x, float z)
         float dz = z - islands[i].z;
         float distance = sqrtf(dx * dx + dz * dz);
 
-        if (distance < islands[i].radius + 4.0f)   // 4.0 = boat safety margin
+        // Calculate the exact angle from the island to the player's ship
+        float angleToPlayer = atan2f(dz, dx);
+        
+        // Find out exactly how far the beach stretches out at this specific angle
+        float actualIslandRadius = getDeformedRadius(islands[i].radius, angleToPlayer, islands[i].x, islands[i].z);
+
+        if (distance < actualIslandRadius + 4.0f) // 4.0 = boat safety margin
             return 1; // Collision detected
     }
     return 0;

@@ -60,6 +60,11 @@ int main(int argc, char **argv)
     while (running)
     {
         SDL_Event ev;
+
+        input.mouseXRel = 0;
+        input.mouseYRel = 0;
+        input.scroll = 0;
+
         while (SDL_PollEvent(&ev))
         {
             if (ev.type == SDL_QUIT)
@@ -150,8 +155,8 @@ int main(int argc, char **argv)
         updateWeather(currentTime);
         applyLighting();
 
-        drawTerrain(currentTime);
-
+        drawTerrain(currentTime, playerX, playerZ);
+        
         // --- RENDER THE PLAYER MODEL ---
         glPushMatrix();
         glTranslatef(playerX, playerY, playerZ);

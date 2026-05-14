@@ -1,14 +1,17 @@
-//Change the waves.c file so the ship doesn't float, it always stays on the level of the water
+// Change the waves.c file so the ship doesn't float, it always stays on the level of the water
 #include "terrain.h"
 #include <math.h>
 
-#define WATER_SIZE 120
+#define WATER_SIZE 250
 
 static const float STEP_SIZE = 2.0f;
 
-void drawWaves(float time)
+void drawWaves(float time, float playerX, float playerZ)
 {
     int size = WATER_SIZE;
+
+    // The fog ends at 300. We cull at 320 so we don't see the water popping in.
+    float maxDistSq = 320.0f * 320.0f;
 
     glBegin(GL_QUADS);
 
@@ -16,6 +19,18 @@ void drawWaves(float time)
     {
         for (int z = -size; z < size; z++)
         {
+            // --- NEW: DISTANCE CULLING ---
+            float worldX = x * STEP_SIZE;
+            float worldZ = z * STEP_SIZE;
+
+            float dx = worldX - playerX;
+            float dz = worldZ - playerZ;
+
+            // If the tile is further than 320 units away, SKIP the math and drawing entirely!
+            if ((dx * dx + dz * dz) > maxDistSq)
+            {
+                continue;
+            }
             // The wave height is calculated based on the GRID index (x, z)
             float h1 = sinf(x * 0.15f + time * 0.7f) * 1.0f +
                        cosf(z * 0.17f + time * 0.5f) * 0.65f +
@@ -61,6 +76,6 @@ float getWaterHeight(float worldX, float worldZ, float time)
     float h = sinf(gridX * 0.15f + time * 0.7f) * 1.0f +
               cosf(gridZ * 0.17f + time * 0.5f) * 0.65f +
               sinf((gridX + gridZ) * 0.06f + time * 0.3f) * 0.35f;
-    
+
     return h;
 }
