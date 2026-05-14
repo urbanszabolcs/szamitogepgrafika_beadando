@@ -21,7 +21,7 @@
 int main(int argc, char **argv)
 {
     SDL_Init(SDL_INIT_VIDEO);
-    SDL_Window *win = SDL_CreateWindow("Teszt", 100, 100, 1920, 1080, SDL_WINDOW_OPENGL);
+    SDL_Window *win = SDL_CreateWindow("Boating around", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_GLContext ctx = SDL_GL_CreateContext(win);
 
     glEnable(GL_DEPTH_TEST);
@@ -85,23 +85,31 @@ int main(int argc, char **argv)
             {
                 if (ev.key.keysym.sym == SDLK_F1)
                     Guide_Toggle();
+
+                // --- NEW ESCAPE LOGIC ---
                 if (ev.key.keysym.sym == SDLK_ESCAPE)
                 {
-                    if (Guide_IsVisible())
-                        Guide_Toggle();
-                    if (Config_IsOpen())
+                    // If ANY menu is open, pressing ESC will close them
+                    if (Guide_IsVisible() || Config_IsOpen())
+                    {
+                        if (Guide_IsVisible())
+                            Guide_Toggle();
+                        if (Config_IsOpen())
+                            Config_Toggle();
+                    }
+                    else
+                    {
+                        // If no menus are open, pressing ESC opens the Settings!
                         Config_Toggle();
+                    }
                 }
-
-                if (ev.key.keysym.sym == SDLK_c)
-                    Config_Toggle();
+                // ------------------------
 
                 if (ev.key.keysym.sym == SDLK_KP_PLUS)
                     increaseDayNightSpeed();
                 if (ev.key.keysym.sym == SDLK_KP_MINUS)
                     decreaseDayNightSpeed();
             }
-
             handleInput(&ev, &input);
         }
 
@@ -159,7 +167,6 @@ int main(int argc, char **argv)
 
         HUD_DrawLayout(0, 0, 0, playerHP, playerAngleRadians, speedToDraw);
 
-        
         if (Guide_IsVisible())
             Guide_Render();
 
