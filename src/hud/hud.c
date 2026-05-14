@@ -55,13 +55,13 @@ static void Begin2D(void)
 static void End2D(void)
 {
     glEnable(GL_DEPTH_TEST);
-    
+
     // --- CRITICAL FIXES FOR 3D RENDERING ---
     glDisable(GL_BLEND);               // Turn off UI transparency
     glDisable(GL_TEXTURE_2D);          // Turn off 2D texturing
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f); // Reset global color to pure white
     // ---------------------------------------
-    
+
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
 
@@ -180,7 +180,8 @@ void HUD_RenderText(const char *text, float x, float y, float scale, float r, fl
 }
 
 // --- MAIN LAYOUT BASED ON THE DRAWING ---
-void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTexture, float healthPercentage, float shipYawRadians, float currentSpeed){
+void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTexture, float healthPercentage, float shipYawRadians, float currentSpeed)
+{
     // 1. Ammo / Current weapon (Top-Left corner)
     if (ammoTexture != 0)
     {
@@ -207,7 +208,7 @@ void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTextu
     HUD_RenderRect(hpX, hpY, hpWidth * healthPercentage, hpHeight, 0.0f, 0.8f, 0.2f, 1.0f); // Green line
 
     // 3. Ship speed, Direction panel (Bottom left corner)
-   if (speedTexture != 0)
+    if (speedTexture != 0)
     {
         HUD_RenderTexture(speedTexture, 20.0f, sHeight - 120.0f, 250.0f, 100.0f);
     }
@@ -223,24 +224,47 @@ void HUD_DrawLayout(GLuint ammoTexture, GLuint speedTexture, GLuint compassTextu
         HUD_RenderText(speedStr, 35.0f, sHeight - 105.0f, 0.4f, 1.0f, 1.0f, 1.0f);
 
         // Render the Gear State (Ahead, Neutral, or Reverse)
-        if (currentSpeed > 0.05f) {
+        if (currentSpeed > 0.05f)
+        {
             HUD_RenderText("Ahead", 35.0f, sHeight - 65.0f, 0.35f, 0.0f, 1.0f, 0.0f); // Green
-        } else if (currentSpeed < -0.05f) {
+        }
+        else if (currentSpeed < -0.05f)
+        {
             HUD_RenderText("Reverse", 35.0f, sHeight - 65.0f, 0.35f, 1.0f, 0.0f, 0.0f); // Red
-        } else {
+        }
+        else
+        {
             HUD_RenderText("Neutral", 35.0f, sHeight - 65.0f, 0.35f, 0.7f, 0.7f, 0.7f); // Gray
         }
     }
     // 4. Compass (Top-right corner)
     float compassSize = 120.0f;
+    float compassX = sWidth - compassSize - 20.0f;
+    float compassY = 20.0f;
+
     if (compassTexture != 0)
     {
-        // The rotation is negative, so that the texture rotates in the opposite direction
-        HUD_RenderTextureRotated(compassTexture, sWidth - compassSize - 20.0f, 20.0f, compassSize, compassSize, -shipYawRadians);
+        // The rotation is negative so the compass dial spins opposite to the ship
+        HUD_RenderTextureRotated(compassTexture, compassX, compassY, compassSize, compassSize, shipYawRadians);
     }
     else
     {
         // Placeholder yellow box
-        HUD_RenderRect(sWidth - compassSize - 20.0f, 20.0f, compassSize, compassSize, 0.6f, 0.6f, 0.0f, 0.8f);
+        HUD_RenderRect(compassX, compassY, compassSize, compassSize, 0.6f, 0.6f, 0.0f, 0.8f);
     }
+
+    // --- NEW: Draw a static Red Triangle to mark "Forward" ---
+    Begin2D();
+    glDisable(GL_TEXTURE_2D);
+    glColor4f(0.85f, 0.15f, 0.15f, 1.0f); // Bright Red
+
+    glBegin(GL_TRIANGLES);
+    float centerX = compassX + (compassSize / 2.0f);
+    // Draw an upward-pointing triangle right at the top middle of the compass
+    glVertex2f(centerX, compassY - 8.0f);         // Top point
+    glVertex2f(centerX - 8.0f, compassY + 12.0f); // Bottom left
+    glVertex2f(centerX + 8.0f, compassY + 12.0f); // Bottom right
+    glEnd();
+
+    End2D();
 }

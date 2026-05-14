@@ -12,3 +12,4 @@
 *.exe
 .vscode/settings.json
 .vscode/settings.json
+obj/*

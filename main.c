@@ -46,6 +46,9 @@ int main(int argc, char **argv)
     loadModel("assets/models/player/CruiseLiner.obj");
     GLuint shipTexture = loadModelTexture("assets/models/player/CruiseLiner_BaseColor.png");
 
+    // Compas
+    GLuint compassTexture = loadModelTexture("assets/hud/compass.png");
+
     HUD_Init(800, 700);
     HUD_LoadFont("assets/fonts/roboto_font.ttf", 64);
     Guide_Init();
@@ -156,7 +159,7 @@ int main(int argc, char **argv)
         applyLighting();
 
         drawTerrain(currentTime, playerX, playerZ);
-        
+
         // --- RENDER THE PLAYER MODEL ---
         glPushMatrix();
         glTranslatef(playerX, playerY, playerZ);
@@ -170,8 +173,8 @@ int main(int argc, char **argv)
         float speedToDraw = GetCurrentSpeed();
         float playerAngleRadians = playerAngle * (pi / 180.0f);
 
-        HUD_DrawLayout(0, 0, 0, playerHP, playerAngleRadians, speedToDraw);
-
+        HUD_DrawLayout(0, 0, compassTexture, playerHP, playerAngleRadians, speedToDraw);
+        
         if (Guide_IsVisible())
             Guide_Render();
 
